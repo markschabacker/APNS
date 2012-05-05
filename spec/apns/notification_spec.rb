@@ -17,7 +17,7 @@ describe APNS::Notification do
     
     it "should return JSON with notification information" do
       n = APNS::Notification.new('device_token', {:alert => 'Hello iPhone', :badge => 3, :sound => 'awesome.caf'})
-      n.packaged_message.should  == "{\"aps\":{\"badge\":3,\"sound\":\"awesome.caf\",\"alert\":\"Hello iPhone\"}}"
+      n.packaged_message.should be_json_eql("{\"aps\":{\"badge\":3,\"sound\":\"awesome.caf\",\"alert\":\"Hello iPhone\"}}")
     end
     
     it "should not include keys that are empty in the JSON" do
@@ -37,6 +37,7 @@ describe APNS::Notification do
   describe '#packaged_notification' do
     it "should package the token" do
       n = APNS::Notification.new('device_token', {:alert => 'Hello iPhone', :badge => 3, :sound => 'awesome.caf'})
+      n.stub(:packaged_message) { "{\"aps\":{\"badge\":3,\"sound\":\"awesome.caf\",\"alert\":\"Hello iPhone\"}}" }
       Base64.encode64(n.packaged_notification).should == "AAAg3vLO/YTnAEB7ImFwcyI6eyJiYWRnZSI6Mywic291bmQiOiJhd2Vzb21l\nLmNhZiIsImFsZXJ0IjoiSGVsbG8gaVBob25lIn19\n"
     end
   end
